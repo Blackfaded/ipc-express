@@ -12,7 +12,6 @@
   "scripts": {
     "start:renderer": "react-scripts start",
     "start:main": "electron .",
-    "prestart": "npm link ..",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
