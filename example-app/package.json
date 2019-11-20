@@ -1,0 +1,39 @@
+{
+  "name": "example-app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-scripts": "3.2.0",
+    "ipc-express": "file:.."
+  },
+  "main": "main/index.js",
+  "scripts": {
+    "start:renderer": "react-scripts start",
+    "start:main": "electron .",
+    "prestart": "npm link ..",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^7.1.2",
+    "electron-is-dev": "^1.1.0"
+  }
+}

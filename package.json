@@ -1,0 +1,19 @@
+{
+  "name": "ipc-express",
+  "version": "0.1.0",
+  "description": "This package enables you to use the electron ipc like an express application without the http overhead.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "ipc",
+    "electron",
+    "express"
+  ],
+  "author": "René Heinen <rene.heinen@gmx.net>",
+  "license": "MIT",
+  "dependencies": {
+    "uuid": "^3.3.3"
+  }
+}
