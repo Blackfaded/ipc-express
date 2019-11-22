@@ -1,6 +1,7 @@
 const CustomResponse = require('./response');
 
-class Server {
+export class IpcServer {
+  listen: (expressApp: any, namespace: string) => any;
   constructor(ipcMain) {
     this.listen = (expressApp, namespace = 'api-request') => {
       ipcMain.on(
@@ -15,5 +16,3 @@ class Server {
     };
   }
 }
-
-module.exports = Server;

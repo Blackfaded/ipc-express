@@ -1,4 +1,12 @@
 module.exports = class Response {
+  originalEvent: any;
+  responseId: number;
+  statusCode: number;
+  setHeader: Function;
+  send: (result: any) => any;
+  getResponseObject: (result: any) => any;
+  status: (code: number) => this;
+
   constructor(originalEvent, responseId) {
     this.originalEvent = originalEvent;
     this.responseId = responseId;

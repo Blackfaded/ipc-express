@@ -1,6 +1,10 @@
 const uuid = require('uuid/v4');
 
-class CustomIPC {
+export class IpcClient {
+  namespace: string;
+  ipcRenderer: any;
+  methods: string[];
+
   constructor(ipcRenderer, namespace = 'api-request') {
     this.ipcRenderer = ipcRenderer;
     this.namespace = namespace;
@@ -10,11 +14,16 @@ class CustomIPC {
     });
   }
 
-  buildRequestHandler(method) {
-    return (path, body = {}) => {
+  buildRequestHandler(method: string) {
+    return (path: string, body = {} as any) => {
       return new Promise((resolve, reject) => {
         const responseId = uuid();
-        this.ipcRenderer.send(this.namespace, { method, path, body, responseId });
+        this.ipcRenderer.send(this.namespace, {
+          method,
+          path,
+          body,
+          responseId
+        });
         this.ipcRenderer.on(responseId, (event, result) => {
           if (result.statusCode >= 200 && result.statusCode < 300) {
             resolve(result);
@@ -26,5 +35,3 @@ class CustomIPC {
     };
   }
 }
-
-module.exports = CustomIPC;

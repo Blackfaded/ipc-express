@@ -1,6 +1,15 @@
 language: node_js
 # script: 'true' because travis should not run npm test
 script: 'true'
+node_js:
+    - "10"
+install:
+    - npm i
+script:
+    - npm run build
+cache:
+    directories:
+        - "node_modules"
 notifications:
     email: false
 branches:
