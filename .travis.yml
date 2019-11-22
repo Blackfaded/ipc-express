@@ -15,9 +15,10 @@ notifications:
 branches:
   only:
   - master
-  tag: release
 deploy:
   - provider: npm
     email: "rene.heinen@gmx.net"
     api_key: $NPM_TOKEN
     skip_cleanup: true
+    on:
+      condition: $TRAVIS_TAG =~ ^(release)$
