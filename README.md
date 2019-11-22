@@ -12,6 +12,7 @@ npm i ipc-express
 ### in your main.js file
 
 ```js
+const { ipcMain } = require('electron');
 const express = require('express');
 const { IpcServer } = require('ipc-express');
 
