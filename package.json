@@ -1,6 +1,6 @@
 {
   "name": "ipc-express",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "This package enables you to use the electron ipc like an express application without the http overhead.",
   "main": "built/index.js",
   "scripts": {
