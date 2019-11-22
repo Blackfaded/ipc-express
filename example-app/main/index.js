@@ -10,6 +10,11 @@ const routes = require('./routes');
 const expressApp = express();
 const ipc = new IpcServer(ipcMain);
 
+const someMiddleware = (req, res, next) => {
+  console.log('middleware executed');
+  next();
+};
+expressApp.use(someMiddleware);
 expressApp.use(routes);
 
 ipc.listen(expressApp, 'api-request');

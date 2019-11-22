@@ -14,16 +14,32 @@ class App extends Component {
 
   async componentDidMount() {
     const testId = 5;
-    const { data } = await ipc.get(`/test/${testId}`);
+    const { data } = await ipc.get(`/test/${testId}?test=testquery`);
+    const { params, query } = data;
     this.setState({
-      response: data
+      response: { params, query }
     });
   }
+
+  renderResponse = data => {
+    return (
+      <>
+        <div>
+          <span>Params: </span>
+          <span> {JSON.stringify(data.params)}</span>
+        </div>
+        <div>
+          <span>Queries: </span>
+          <span> {JSON.stringify(data.query)}</span>
+        </div>
+      </>
+    );
+  };
 
   render() {
     return (
       <div>
-        {this.state.response && <div>Received id {this.state.response}</div>}
+        {this.state.response && this.renderResponse(this.state.response)}
       </div>
     );
   }
