@@ -1,4 +1,4 @@
-const CustomResponse = require('./response');
+import { Response } from './response';
 
 export class IpcServer {
   listen: (expressApp: any, namespace: string) => any;
@@ -9,7 +9,7 @@ export class IpcServer {
         async (originalEvent, { method, path, body, responseId }) => {
           expressApp(
             { method, body, url: path },
-            new CustomResponse(originalEvent, responseId)
+            new Response(originalEvent, responseId)
           );
         }
       );

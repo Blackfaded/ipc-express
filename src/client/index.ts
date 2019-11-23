@@ -1,4 +1,4 @@
-const uuid = require('uuid/v4');
+import * as uuid from 'uuid/v4';
 
 export class IpcClient {
   namespace: string;

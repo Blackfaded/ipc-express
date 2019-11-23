@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "./built",
     "allowJs": true,
-    "target": "es5",
+    "lib": ["es5", "es2015", "dom", "scripthost"],
     "moduleResolution": "node"
   },
   "include": ["./src/**/*"]

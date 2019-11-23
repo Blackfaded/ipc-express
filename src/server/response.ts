@@ -1,4 +1,4 @@
-module.exports = class Response {
+export class Response {
   originalEvent: any;
   responseId: number;
   statusCode: number;
