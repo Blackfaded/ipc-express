@@ -32,7 +32,7 @@ expressApp.get('/test/:id', (req, res) => {
 });
 
 
-ipc.listen(expressApp, 'api-request');
+ipc.listen(expressApp);
 ```
 
 ### In your frontend framework

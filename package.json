@@ -8,6 +8,7 @@
   },
   "description": "This package enables you to use the electron ipc like an express application without the http overhead.",
   "main": "built/index.js",
+  "types": "built/index.d.ts",
   "scripts": {
     "build": "tsc",
     "dev": "tsc-watch",
@@ -23,7 +24,6 @@
     "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "@babel/types": "^7.7.2",
     "tsc-watch": "^4.0.0",
     "typescript": "^3.7.2"
   },

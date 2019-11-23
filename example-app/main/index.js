@@ -9,7 +9,7 @@ const routes = require('./routes');
 
 const expressApp = express();
 const ipc = new IpcServer(ipcMain);
-
+console.log(ipc);
 const someMiddleware = (req, res, next) => {
   console.log('middleware executed');
   next();
@@ -17,7 +17,7 @@ const someMiddleware = (req, res, next) => {
 expressApp.use(someMiddleware);
 expressApp.use(routes);
 
-ipc.listen(expressApp, 'api-request');
+ipc.listen(expressApp);
 
 const createWindow = async () => {
   mainWindow = new BrowserWindow({

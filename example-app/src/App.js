@@ -3,7 +3,7 @@ import { IpcClient } from 'ipc-express';
 const { ipcRenderer } = window.require('electron');
 
 const ipc = new IpcClient(ipcRenderer);
-
+console.log(ipc);
 class App extends Component {
   constructor(props) {
     super(props);
@@ -14,6 +14,7 @@ class App extends Component {
 
   async componentDidMount() {
     const testId = 5;
+
     const { data } = await ipc.get(`/test/${testId}?test=testquery`);
     const { params, query } = data;
     this.setState({

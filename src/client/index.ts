@@ -1,13 +1,11 @@
 import * as uuid from 'uuid/v4';
 
 export class IpcClient {
-  namespace: string;
-  ipcRenderer: any;
-  methods: string[];
+  private ipcRenderer: any;
+  private methods: string[];
 
-  constructor(ipcRenderer, namespace = 'api-request') {
+  constructor(ipcRenderer: any) {
     this.ipcRenderer = ipcRenderer;
-    this.namespace = namespace;
     this.methods = ['get', 'post', 'put', 'patch', 'delete'];
     this.methods.forEach(method => {
       this[method] = this.buildRequestHandler(method);
@@ -18,7 +16,7 @@ export class IpcClient {
     return (path: string, body = {} as any) => {
       return new Promise((resolve, reject) => {
         const responseId = uuid();
-        this.ipcRenderer.send(this.namespace, {
+        this.ipcRenderer.send('api-request', {
           method,
           path,
           body,
