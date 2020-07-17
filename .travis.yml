@@ -1,24 +1,23 @@
 language: node_js
-# script: 'true' because travis should not run npm test
-script: 'true'
 node_js:
-    - "10"
+  - '10'
 install:
-    - npm i
+  - npm i
 script:
-    - npm run build
+  - npm run test
+  - npm run build
 cache:
-    directories:
-        - "node_modules"
+  directories:
+    - 'node_modules'
 notifications:
-    email: false
+  email: false
 branches:
   only:
-  - master
-  - develop
+    - master
+    - develop
 deploy:
   - provider: npm
-    email: "rene.heinen@gmx.net"
+    email: 'rene.heinen@gmx.net'
     api_key: $NPM_TOKEN
     skip_cleanup: true
     on:
