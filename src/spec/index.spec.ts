@@ -40,13 +40,11 @@ describe('ipc-express', () => {
 
   describe('Query', () => {
     beforeEach(() => {
-      console.log('executed');
       expressApp.use('/test', (req, res) => {
         res.send({
           query: req.query,
         });
       });
-      console.log('executed2');
     });
     it('shows an initial window', async () => {
       const { data } = await ipcC.get('/test?testquery=test');
