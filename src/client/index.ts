@@ -1,27 +1,44 @@
-import * as uuid from 'uuid/v4';
+import { IpcRenderer } from 'electron';
+import { v4 as uuid } from 'uuid';
+
+import { Method } from '../types';
+
+interface SendData {
+  method: Method;
+  path: string;
+  body: any;
+  responseId: string;
+}
 
 export class IpcClient {
-  private ipcRenderer: any;
-  private methods: string[];
+  namespace: string;
+  ipcRenderer: IpcRenderer;
+  methods: Method[];
 
-  constructor(ipcRenderer: any) {
+  constructor(ipcRenderer: IpcRenderer, namespace = 'api-request') {
     this.ipcRenderer = ipcRenderer;
+    this.namespace = namespace;
     this.methods = ['get', 'post', 'put', 'patch', 'delete'];
-    this.methods.forEach(method => {
+    this.methods.forEach((method) => {
       this[method] = this.buildRequestHandler(method);
     });
   }
 
-  buildRequestHandler(method: string) {
+  send(data: SendData) {
+    this.ipcRenderer.send(this.namespace, data);
+  }
+
+  buildRequestHandler(method: Method) {
     return (path: string, body = {} as any) => {
       return new Promise((resolve, reject) => {
         const responseId = uuid();
-        this.ipcRenderer.send('api-request', {
+        this.send({
           method,
           path,
           body,
-          responseId
+          responseId,
         });
+
         this.ipcRenderer.on(responseId, (event, result) => {
           if (result.statusCode >= 200 && result.statusCode < 300) {
             resolve(result);
