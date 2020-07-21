@@ -3,8 +3,8 @@ import { IpcMain } from 'electron';
 import CustomResponse from './response';
 
 export class IpcServer {
-  ipcMain: IpcMain;
-  namespace: string;
+  private ipcMain: IpcMain;
+  private namespace: string;
   listen: (expressApp: any, namespace?: string) => void;
   removeAllListeners: () => void;
   constructor(ipcMain: IpcMain) {

@@ -6,7 +6,6 @@
     "type": "git",
     "url": "https://github.com/Blackfaded/ipc-express.git"
   },
-  "types": "built/index.d.ts",
   "description": "This package enables you to use the electron ipc like an express application without the http overhead.",
   "main": "build/index.js",
   "scripts": {

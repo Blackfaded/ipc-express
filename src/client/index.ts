@@ -11,9 +11,9 @@ interface SendData {
 }
 
 export class IpcClient {
-  namespace: string;
-  ipcRenderer: IpcRenderer;
-  methods: Method[];
+  private namespace: string;
+  private ipcRenderer: IpcRenderer;
+  private methods: Method[];
 
   constructor(ipcRenderer: IpcRenderer, namespace = 'api-request') {
     this.ipcRenderer = ipcRenderer;
@@ -28,7 +28,7 @@ export class IpcClient {
     this.ipcRenderer.send(this.namespace, data);
   }
 
-  buildRequestHandler(method: Method) {
+  buildRequestHandler(method: Method): (path: string, body: any) => Promise<any> {
     return (path: string, body = {} as any) => {
       return new Promise((resolve, reject) => {
         const responseId = uuid();
@@ -39,7 +39,7 @@ export class IpcClient {
           responseId,
         });
 
-        this.ipcRenderer.on(responseId, (event, result) => {
+        this.ipcRenderer.on(responseId, (_, result) => {
           if (result.statusCode >= 200 && result.statusCode < 300) {
             resolve(result);
           } else {

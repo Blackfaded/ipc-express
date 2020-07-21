@@ -1,13 +1,13 @@
 import { IResponseObject } from '../interfaces';
 
 export default class Response {
-  originalEvent: any;
-  responseId: string;
-  statusCode: number;
+  private originalEvent: any;
+  private responseId: string;
+  private statusCode: number;
   setHeader: () => void;
   send: (result) => void;
-  getResponseObject: (result) => IResponseObject;
-  status: (code: number) => this;
+  private getResponseObject: (result) => IResponseObject;
+  private status: (code: number) => this;
 
   constructor(originalEvent, responseId: string) {
     this.originalEvent = originalEvent;

@@ -17,11 +17,11 @@ describe('ipc-express', () => {
     ipcC = new IpcClient(cloneIpcRenderer);
     ipcS = new IpcServer(cloneipcMain);
 
-    ipcS.listen(expressApp, 'api-request');
+    ipcS.listen(expressApp);
   });
 
   afterEach(() => {
-    ipcS.removeAllListeners('api-request');
+    ipcS.removeAllListeners();
   });
 
   describe('Params', () => {
