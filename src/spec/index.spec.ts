@@ -32,7 +32,7 @@ describe('ipc-express', () => {
         });
       });
     });
-    it('shows an initial window', async () => {
+    it('should return send params', async () => {
       const { data } = await ipcC.get('/test/testID');
       expect(data.params.id).toEqual('testID');
     });
@@ -46,7 +46,7 @@ describe('ipc-express', () => {
         });
       });
     });
-    it('shows an initial window', async () => {
+    it('should return send query', async () => {
       const { data } = await ipcC.get('/test?testquery=test');
       expect(data.query).toEqual({
         testquery: 'test',
@@ -64,7 +64,7 @@ describe('ipc-express', () => {
         }, 5000);
       });
     });
-    it('shows an initial window', async () => {
+    it('should return send data even with long computation', async () => {
       const { data } = await ipcC.get('/test');
       expect(data.long).toEqual(true);
     }, 10000);
