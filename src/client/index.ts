@@ -1,52 +1,73 @@
 import { IpcRenderer } from 'electron';
-import { v4 as uuid } from 'uuid';
+import { DEFAULT_NAMESPACE } from '../constant';
 
-import { Method } from '../types';
+import { IpcPort, Method, Methods } from '../type';
+import { uniqueId } from '../util';
+import RequestData from './request';
 
-interface SendData {
-  method: Method;
-  path: string;
-  body: any;
-  responseId: string;
-}
+type IClient = {
+  [key in typeof Methods[number]]: <Request = any | undefined, Response = any>(
+    url: string,
+    body?: Request
+  ) => Promise<Response>;
+};
 
-export class IpcClient {
-  private namespace: string;
-  private ipcRenderer: IpcRenderer;
-  private methods: Method[];
-
-  constructor(ipcRenderer: IpcRenderer, namespace = 'api-request') {
-    this.ipcRenderer = ipcRenderer;
+export class IpcClient implements IClient {
+  namespace: string;
+  ipcPort: IpcPort | IpcRenderer;
+  constructor(ipcPort: IpcPort | IpcRenderer, namespace = DEFAULT_NAMESPACE) {
+    this.ipcPort = ipcPort;
     this.namespace = namespace;
-    this.methods = ['get', 'post', 'put', 'patch', 'delete'];
-    this.methods.forEach((method) => {
-      this[method] = this.buildRequestHandler(method);
-    });
   }
 
-  send(data: SendData) {
-    this.ipcRenderer.send(this.namespace, data);
-  }
+  private send = (data: RequestData) => this.ipcPort.send(this.namespace, data);
 
-  buildRequestHandler(method: Method): (path: string, body: any) => Promise<any> {
-    return (path: string, body = {} as any) => {
-      return new Promise((resolve, reject) => {
-        const responseId = uuid();
-        this.send({
-          method,
-          path,
-          body,
-          responseId,
-        });
+  request = <Request = any | undefined, Response = any>(
+    method: Method,
+    url: string,
+    body?: Request
+  ) =>
+    new Promise<Response>((resolve, reject) => {
+      const responseId = uniqueId();
 
-        this.ipcRenderer.on(responseId, (_, result) => {
-          if (result.statusCode >= 200 && result.statusCode < 300) {
-            resolve(result);
-          } else {
-            reject(result);
-          }
-        });
+      this.ipcPort.once(responseId, (_: any, result: any) => {
+        if (result.statusCode >= 200 && result.statusCode < 300) {
+          resolve(result);
+        } else {
+          reject(result);
+        }
       });
-    };
-  }
+
+      this.send({
+        method,
+        url,
+        body: body || {},
+        responseId,
+      });
+    });
+
+  post = <Request = any | undefined, Response = any>(
+    url: string,
+    body?: Request
+  ) => this.request<Request, Response>('post', url, body);
+
+  get = <Request = any | undefined, Response = any>(
+    url: string,
+    body?: Request
+  ) => this.request<Request, Response>('get', url, body);
+
+  put = <Request = any | undefined, Response = any>(
+    url: string,
+    body?: Request
+  ) => this.request<Request, Response>('put', url, body);
+
+  patch = <Request = any | undefined, Response = any>(
+    url: string,
+    body?: Request
+  ) => this.request<Request, Response>('patch', url, body);
+
+  delete = <Request = any | undefined, Response = any>(
+    url: string,
+    body?: Request
+  ) => this.request<Request, Response>('delete', url, body);
 }
