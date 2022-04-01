@@ -43,14 +43,14 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "module": "dist/tsdx-demo.esm.js",
+  "module": "dist/ipc-express.esm.js",
   "size-limit": [
     {
-      "path": "dist/tsdx-demo.cjs.production.min.js",
+      "path": "dist/ipc-express.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/tsdx-demo.esm.js",
+      "path": "dist/ipc-express.esm.js",
       "limit": "10 KB"
     }
   ],
