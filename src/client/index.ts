@@ -1,15 +1,15 @@
 import { IpcRenderer } from 'electron';
-import { DEFAULT_NAMESPACE } from '../constant';
 
-import { IpcPort, Method, Methods } from '../type';
+import { DEFAULT_NAMESPACE } from '../constant';
+import { IpcPort, Method, Methods, Response } from '../type';
 import { uniqueId } from '../util';
 import RequestData from './request';
 
 type IClient = {
-  [key in typeof Methods[number]]: <Request = any | undefined, Response = any>(
+  [key in typeof Methods[number]]: <Data = any>(
     url: string,
-    body?: Request
-  ) => Promise<Response>;
+    body?: any
+  ) => Promise<Response<Data>>;
 };
 
 export class IpcClient implements IClient {
@@ -22,12 +22,8 @@ export class IpcClient implements IClient {
 
   private send = (data: RequestData) => this.ipcPort.send(this.namespace, data);
 
-  request = <Request = any | undefined, Response = any>(
-    method: Method,
-    url: string,
-    body?: Request
-  ) =>
-    new Promise<Response>((resolve, reject) => {
+  request = <Data = any>(method: Method, url: string, body?: any) =>
+    new Promise<Response<Data>>((resolve, reject) => {
       const responseId = uniqueId();
 
       this.ipcPort.once(responseId, (_: any, result: any) => {
@@ -46,28 +42,18 @@ export class IpcClient implements IClient {
       });
     });
 
-  post = <Request = any | undefined, Response = any>(
-    url: string,
-    body?: Request
-  ) => this.request<Request, Response>('post', url, body);
+  post = <Data = any>(url: string, body?: any) =>
+    this.request<Data>('post', url, body);
 
-  get = <Request = any | undefined, Response = any>(
-    url: string,
-    body?: Request
-  ) => this.request<Request, Response>('get', url, body);
+  get = <Data = any>(url: string, body?: any) =>
+    this.request<Data>('get', url, body);
 
-  put = <Request = any | undefined, Response = any>(
-    url: string,
-    body?: Request
-  ) => this.request<Request, Response>('put', url, body);
+  put = <Data = any>(url: string, body?: any) =>
+    this.request<Data>('put', url, body);
 
-  patch = <Request = any | undefined, Response = any>(
-    url: string,
-    body?: Request
-  ) => this.request<Request, Response>('patch', url, body);
+  patch = <Data = any>(url: string, body?: any) =>
+    this.request<Data>('patch', url, body);
 
-  delete = <Request = any | undefined, Response = any>(
-    url: string,
-    body?: Request
-  ) => this.request<Request, Response>('delete', url, body);
+  delete = <Data = any>(url: string, body?: any) =>
+    this.request<Data>('delete', url, body);
 }
