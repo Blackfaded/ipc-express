@@ -37,7 +37,7 @@ export class IpcClient implements IClient {
       this.send({
         method,
         url,
-        body: body || {},
+        body,
         responseId,
       });
     });

@@ -71,6 +71,52 @@ describe('Common', () => {
       expect(data.long).toEqual(true);
     }, 10000);
   });
+
+  describe('Error', () => {
+    beforeEach(() => {
+      expressApp.use('/test/:id', () => {
+        throw new Error('test');
+      });
+
+      expressApp.use((err: any, _: any, res: any, __: any) => {
+        res.status(500).send(err.message);
+      });
+    });
+
+    it('should get error', async () => {
+      try {
+        await ipcClient.get('/test/testID');
+      } catch (e) {
+        expect(e).toEqual('test');
+      }
+    });
+  });
+
+  describe('Null', () => {
+    it('should get null', async () => {
+      expressApp.use('/test', (req, res) => {
+        expect(req.body).toEqual(null);
+
+        res.send(null);
+      });
+
+      const data = await ipcClient.post('/test', null);
+      expect(data).toEqual(null);
+    });
+  });
+
+  describe('Undefined', () => {
+    it('should get undefined', async () => {
+      expressApp.use('/test', (req, res) => {
+        expect(req.body).toEqual(undefined);
+
+        res.send();
+      });
+
+      const data = await ipcClient.post('/test');
+      expect(data).toEqual(undefined);
+    });
+  });
 });
 
 describe('MessageChannelMain', () => {
@@ -105,34 +151,6 @@ describe('MessageChannelMain', () => {
     it('should get params', async () => {
       const data = await ipcClient1.get('/test/testID');
       expect(data.params.id).toEqual('testID');
-    });
-  });
-
-  describe('Error', () => {
-    beforeEach(() => {
-      const { port1, port2 } = new MessageChannelPolyfill();
-
-      expressApp = express();
-      ipcClient1 = new IpcClient(new MessagePortWrapper(port2));
-      ipcServer1 = new IpcServer(new MessagePortWrapper(port1));
-
-      ipcServer1.listen(expressApp);
-
-      expressApp.use('/test/:id', () => {
-        throw new Error('test');
-      });
-
-      expressApp.use((err: any, _: any, res: any, __: any) => {
-        res.status(500).send(err.message);
-      });
-    });
-
-    it('should get error', async () => {
-      try {
-        await ipcClient1.get('/test/testID');
-      } catch (e) {
-        expect(e).toEqual('test');
-      }
     });
   });
 
