@@ -108,6 +108,36 @@ describe('MessageChannelMain', () => {
     });
   });
 
+  describe('Error', () => {
+    beforeEach(() => {
+      const { port1, port2 } = new MessageChannelPolyfill();
+
+      expressApp = express();
+      ipcClient1 = new IpcClient(new MessagePortWrapper(port2));
+      ipcServer1 = new IpcServer(new MessagePortWrapper(port1));
+
+      ipcServer1.listen(expressApp);
+
+      expressApp.use('/test/:id', () => {
+        throw new Error('test');
+      });
+
+      expressApp.use((err: any, _: any, res: any, __: any) => {
+        res.status(500).send(err.message);
+      });
+    });
+
+    it('should get error', async () => {
+      try {
+        await ipcClient1.get('/test/testID');
+      } catch (e) {
+        const error: any = e;
+        expect(error.statusCode).toEqual(500);
+        expect(error.data).toEqual('test');
+      }
+    });
+  });
+
   describe('Bidirectional connection', () => {
     beforeEach(() => {
       const { port1, port2 } = new MessageChannelPolyfill();
