@@ -35,7 +35,7 @@ describe('Common', () => {
     });
 
     it('should get params', async () => {
-      const { data } = await ipcClient.get('/test/testID');
+      const data = await ipcClient.get('/test/testID');
       expect(data.params.id).toEqual('testID');
     });
   });
@@ -49,7 +49,7 @@ describe('Common', () => {
       });
     });
     it('should return send query', async () => {
-      const { data } = await ipcClient.get('/test?testquery=test');
+      const data = await ipcClient.get('/test?testquery=test');
       expect(data.query).toEqual({
         testquery: 'test',
       });
@@ -67,7 +67,7 @@ describe('Common', () => {
       });
     });
     it('should return send data even with long computation', async () => {
-      const { data } = await ipcClient.get('/test');
+      const data = await ipcClient.get('/test');
       expect(data.long).toEqual(true);
     }, 10000);
   });
@@ -103,7 +103,7 @@ describe('MessageChannelMain', () => {
     });
 
     it('should get params', async () => {
-      const { data } = await ipcClient1.get('/test/testID');
+      const data = await ipcClient1.get('/test/testID');
       expect(data.params.id).toEqual('testID');
     });
   });
@@ -131,9 +131,7 @@ describe('MessageChannelMain', () => {
       try {
         await ipcClient1.get('/test/testID');
       } catch (e) {
-        const error: any = e;
-        expect(error.statusCode).toEqual(500);
-        expect(error.data).toEqual('test');
+        expect(e).toEqual('test');
       }
     });
   });
@@ -164,8 +162,8 @@ describe('MessageChannelMain', () => {
     });
 
     it('should get params', async () => {
-      const { data: data1 } = await ipcClient1.get('/test/testID');
-      const { data: data2 } = await ipcClient2.get('/test/testID');
+      const data1 = await ipcClient1.get('/test/testID');
+      const data2 = await ipcClient2.get('/test/testID');
 
       expect(data1.params.id).toEqual(data2.params.id);
     });

@@ -1,7 +1,7 @@
 import { IpcRenderer } from 'electron';
 
 import { DEFAULT_NAMESPACE } from '../constant';
-import { IpcPort, Method, Methods, Response } from '../type';
+import { IpcPort, Method, Methods } from '../type';
 import { uniqueId } from '../util';
 import RequestData from './request';
 
@@ -9,7 +9,7 @@ type IClient = {
   [key in typeof Methods[number]]: <Data = any>(
     url: string,
     body?: any
-  ) => Promise<Response<Data>>;
+  ) => Promise<Data>;
 };
 
 export class IpcClient implements IClient {
@@ -23,14 +23,14 @@ export class IpcClient implements IClient {
   private send = (data: RequestData) => this.ipcPort.send(this.namespace, data);
 
   request = <Data = any>(method: Method, url: string, body?: any) =>
-    new Promise<Response<Data>>((resolve, reject) => {
+    new Promise<Data>((resolve, reject) => {
       const responseId = uniqueId();
 
-      this.ipcPort.once(responseId, (_: any, result: any) => {
-        if (result.statusCode >= 200 && result.statusCode < 300) {
-          resolve(result);
+      this.ipcPort.once(responseId, (_: any, result) => {
+        if (result && result.statusCode >= 200 && result.statusCode < 300) {
+          resolve(result.data);
         } else {
-          reject(result);
+          reject(result.data);
         }
       });
 

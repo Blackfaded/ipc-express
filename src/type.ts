@@ -16,8 +16,3 @@ export interface IpcPort {
   ): void;
   removeAllListeners(channel?: string): void;
 }
-
-export interface Response<Data = any> {
-  data: Data;
-  statusCode: number;
-}
