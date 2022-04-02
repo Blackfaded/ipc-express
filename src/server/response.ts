@@ -20,6 +20,7 @@ export default class Response {
   });
 
   setHeader = () => this;
+
   send = (result: any) => {
     this.originalEvent.sender.send(
       this.responseId,
