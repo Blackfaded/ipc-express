@@ -1,22 +1,36 @@
 import { IpcMain } from 'electron';
+import { Express } from 'express';
+import RequestData from '../client/request';
+import { DEFAULT_NAMESPACE } from '../constant';
+import { IpcPort } from '../type';
 
-import CustomResponse from './response';
+import Response from './response';
 
 export class IpcServer {
-  private ipcMain: IpcMain;
-  private namespace: string;
-  listen: (expressApp: any, namespace?: string) => void;
-  removeAllListeners: () => void;
-  constructor(ipcMain: IpcMain) {
-    this.ipcMain = ipcMain;
-    this.listen = (expressApp, namespace = 'api-request') => {
-      this.namespace = namespace;
-      ipcMain.on(this.namespace, async (originalEvent, { method, path, body, responseId }) => {
-        expressApp({ method, body, url: path }, new CustomResponse(originalEvent, responseId));
-      });
-    };
-    this.removeAllListeners = () => {
-      this.ipcMain.removeAllListeners(this.namespace);
-    };
+  ipcPort: IpcPort | IpcMain;
+  namespace: string;
+  constructor(ipcPort: IpcPort | IpcMain, namespace = DEFAULT_NAMESPACE) {
+    this.ipcPort = ipcPort;
+    this.namespace = namespace;
   }
+
+  listen = (expressApp: Express) => {
+    this.ipcPort.on(
+      this.namespace,
+      (originalEvent: any, data?: RequestData) => {
+        if (!data) {
+          return;
+        }
+
+        expressApp(
+          data as any,
+          new Response(originalEvent, this.namespace, data.responseId) as any
+        );
+      }
+    );
+  };
+
+  removeAllListeners = () => {
+    return this.ipcPort.removeAllListeners(this.namespace);
+  };
 }

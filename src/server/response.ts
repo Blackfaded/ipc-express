@@ -1,35 +1,30 @@
-import { IResponseObject } from '../interfaces';
+import { IpcPortEvent } from '../type';
 
 export default class Response {
-  private originalEvent: any;
+  private originalEvent: IpcPortEvent;
   private responseId: string;
+  private namespace: string;
   private statusCode: number;
-  setHeader: () => void;
-  send: (result) => void;
-  private getResponseObject: (result) => IResponseObject;
-  private status: (code: number) => this;
 
-  constructor(originalEvent, responseId: string) {
+  constructor(originalEvent: any, namespace: string, responseId: string) {
     this.originalEvent = originalEvent;
+    this.namespace = namespace;
     this.responseId = responseId;
     this.statusCode = 200;
-
-    this.setHeader = () => this;
-
-    this.send = (result) => {
-      this.originalEvent.sender.send(this.responseId, this.getResponseObject(result));
-    };
-
-    this.getResponseObject = (result) => ({
-      data: result,
-      statusCode: this.statusCode,
-    });
-
-    this.status = (code: number) => {
-      this.statusCode = code;
-      return this;
-    };
-
-    return this;
   }
+
+  private getResponseObject = (result: any) => ({
+    namespace: this.namespace,
+    data: result,
+    statusCode: this.statusCode,
+  });
+
+  setHeader = () => this;
+
+  send = (result: any) => {
+    this.originalEvent.sender.send(
+      this.responseId,
+      this.getResponseObject(result)
+    );
+  };
 }
